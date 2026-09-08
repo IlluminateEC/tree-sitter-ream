@@ -1,0 +1,22 @@
+
+type Status
+    = :online
+    | :idle
+    | :offline
+
+type Option[T]
+    = { :some, T }
+    | { :none }
+
+type User = #{
+    name: String,
+    status: Status,
+    display_name: Option[String]
+}
+
+fn has_display_name(user: User) -> bool {
+    match user.display_name {
+        { :some, _ } => true,
+        { :none } => false,
+    }
+}
