@@ -64,7 +64,7 @@ export default grammar({
       optional(seq('->', $.type_composed)),
       optional(seq(
         '{',
-        optional($.expression),
+        repeat($.expression),
         '}'))
     ),
 
