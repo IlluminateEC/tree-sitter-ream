@@ -20,3 +20,4 @@
 (superdoc_comment) @comment.doc
 (function_definition_composed (identifier) @function)
 (function_arg (identifier) @variable.parameter)
+(trait_composed (identifier) @type)
