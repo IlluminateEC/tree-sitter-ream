@@ -7,6 +7,26 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
+/**
+ *
+ * @param {RuleOrLiteral} rule
+ * @param {RuleOrLiteral} seperator
+ */
+function repeated_with_trailing_separator(rule, seperator) {
+  return seq(rule, repeat(seq(seperator, rule)), optional(seperator))
+}
+
+/**
+ *
+ * @param {RuleOrLiteral} rule
+ * @param {RuleOrLiteral} seperator
+ */
+function repeated_with_separator(rule, seperator) {
+  return seq(rule, repeat(seq(seperator, rule)))
+}
+
+
+
 export default grammar({
   name: "ream",
   extras: $ => [
@@ -37,8 +57,15 @@ export default grammar({
     ),
 
     function_definition_composed: $ => seq(
-      'fn', $.identifier, optional($.generic_args_composed), '(', optional(seq($.function_arg, repeat(seq(',', $.function_arg)))), ')',
-      optional(seq('->', $.type_composed))
+      'fn', $.identifier, optional($.generic_args_composed),
+      '(',
+        optional(repeated_with_trailing_separator($.function_arg, ',')),
+      ')',
+      optional(seq('->', $.type_composed)),
+      optional(seq(
+        '{',
+        optional($.expression),
+        '}'))
     ),
 
     import_composed: $ => seq(
@@ -47,7 +74,7 @@ export default grammar({
 
     generic_args_composed: $ => seq(
       token.immediate('['),
-        $.identifier, optional(repeat(seq(',', $.identifier))),
+       repeated_with_separator($.identifier, ','),
       ']'
     ),
 
@@ -60,6 +87,54 @@ export default grammar({
       '}'
     ),
 
+    expression: $ => $.expr_atom,
+
+    expr_atom: $ => choice(
+      $.identifier,
+      $.integer,
+      $.fractional,
+      $.atom,
+      $.let_expression,
+      $.expr_tuple,
+      $.expr_map,
+      seq('(', $.expression, ')'),
+      $.match_expression
+    ),
+
+    let_expression: $ => seq(
+      'let', $.pattern, optional(seq(':', $.type_composed)), '=', $.expression
+    ),
+
+    integer: $ => /[0-9]+/,
+
+    fractional: $ => /[0-9]+\.[0-9]+/,
+
+    pattern: $ => $.identifier,
+
+    expr_tuple: $ => seq(
+      '{', repeated_with_trailing_separator($.expression, ','), '}'
+    ),
+
+    expr_map_pair: $ => seq(
+      $.identifier, ':', $.expression
+    ),
+
+    expr_map: $ => seq(
+      '#{', repeated_with_trailing_separator($.expr_map_pair, ','), '}'
+    ),
+
+    match_clause: $ => seq(
+      $.pattern, optional(seq('if', $.expression)), '=>', $.match_expression
+    ),
+
+    match_expression: $ => seq(
+      'match',
+      $.expression,
+      '{',
+        repeat($.match_clause),
+      '}'
+    ),
+
     type_composed: $ => $.type_union,
 
     type_definition_composed: $ => seq(
@@ -68,11 +143,11 @@ export default grammar({
 
     map_pair: $ => seq($.identifier, ":", $.type_composed),
 
-    map: $ => seq('#{', $.map_pair, repeat(seq(",", $.map_pair)), '}'),
+    map: $ => seq('#{', repeated_with_trailing_separator($.map_pair, ','), '}'),
 
-    tuple: $ => seq('{', $.type_composed, repeat(seq(",", $.type_composed)), '}'),
+    tuple: $ => seq('{', repeated_with_trailing_separator($.type_composed, ','), '}'),
 
-    generic_application: $ => seq($.identifier, optional(seq(token.immediate('['), $.type_composed, repeat(seq(",", $.type_composed)), ']'))),
+    generic_application: $ => seq($.identifier, optional(seq(token.immediate('['), repeated_with_separator($.type_composed, ','), ']'))),
 
     type_atom: $ => choice(
       $.generic_application,
