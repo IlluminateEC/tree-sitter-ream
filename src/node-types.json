@@ -345,10 +345,6 @@
     "named": false
   },
   {
-    "type": "//",
-    "named": false
-  },
-  {
     "type": ":",
     "named": false
   },
@@ -373,6 +369,16 @@
     "named": true
   },
   {
+    "type": "comment",
+    "named": true,
+    "extra": true
+  },
+  {
+    "type": "doc_comment",
+    "named": true,
+    "extra": true
+  },
+  {
     "type": "fn",
     "named": false
   },
@@ -383,6 +389,11 @@
   {
     "type": "import",
     "named": false
+  },
+  {
+    "type": "superdoc_comment",
+    "named": true,
+    "extra": true
   },
   {
     "type": "trait",

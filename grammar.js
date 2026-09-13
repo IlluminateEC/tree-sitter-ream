@@ -10,14 +10,15 @@
 export default grammar({
   name: "ream",
   extras: $ => [
-    $._comment,
+    $.comment,
+    $.doc_comment,
+    $.superdoc_comment,
     $._whitespace,
   ],
 
   word: $ => $.identifier,
 
   rules: {
-    // TODO: add the actual grammar rules
     source_file: $ => repeat($.definition),
 
     _whitespace: $ => /[\s\t\n\r\f]+/,
@@ -100,7 +101,9 @@ export default grammar({
     // import_alias: $ => seq('as', $.identifier),
     // import_path: $ => seq($.identifier, repeat(seq('/', $.identifier))),
 
-    _comment: $ => seq('//', /[^\n]*/),
+    comment: $ => /\/\/[^\n]*[^\n]*/,
+    doc_comment: $ => /\/\/\/[^\n]*[^\n]*/,
+    superdoc_comment: $ => /\/![^\n]*[^\n]*/,
 
     atom: $ => /:[_\p{Alphabetic}\p{Nd}\p{Extended_Pictographic}]+/u,
     identifier: $ => /[_\p{Alphabetic}\p{Extended_Pictographic}][_\p{Alphabetic}\p{Nd}\p{Extended_Pictographic}]*/u,

@@ -548,18 +548,17 @@
         }
       ]
     },
-    "_comment": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "//"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[^\\n]*"
-        }
-      ]
+    "comment": {
+      "type": "PATTERN",
+      "value": "\\/\\/[^\\n]*[^\\n]*"
+    },
+    "doc_comment": {
+      "type": "PATTERN",
+      "value": "\\/\\/\\/[^\\n]*[^\\n]*"
+    },
+    "superdoc_comment": {
+      "type": "PATTERN",
+      "value": "\\/![^\\n]*[^\\n]*"
     },
     "atom": {
       "type": "PATTERN",
@@ -575,7 +574,15 @@
   "extras": [
     {
       "type": "SYMBOL",
-      "name": "_comment"
+      "name": "comment"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "doc_comment"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "superdoc_comment"
     },
     {
       "type": "SYMBOL",
