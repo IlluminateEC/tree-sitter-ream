@@ -16,8 +16,8 @@
 (map_pair (identifier) @property)
 (import_composed (identifier) @module)
 (comment) @comment
-(doc_comment) @comment.doc
-(superdoc_comment) @comment.doc
+(doc_comment) @comment.documentation
+(superdoc_comment) @comment.documentation
 (function_definition_composed (identifier) @function)
 (function_arg (identifier) @variable.parameter)
 (trait_composed (identifier) @type)

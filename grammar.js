@@ -91,9 +91,9 @@ export default grammar({
       optional(seq('|', $.type_union))
     ),
 
-    comment: $ => /\/\/[^\n]*[^\n]*/,
-    doc_comment: $ => /\/\/\/[^\n]*[^\n]*/,
-    superdoc_comment: $ => /\/![^\n]*[^\n]*/,
+    comment: $ => token(prec(1, /\/\/[^\n]*/)),
+    doc_comment: $ => token(prec(2, /\/\/\/[^\n]*/)),
+    superdoc_comment: $ => token(prec(3, /\/\/![^\n]*/)),
 
     atom: $ => /:[_\p{Alphabetic}\p{Nd}\p{Extended_Pictographic}]+/u,
     identifier: $ => /[_\p{Alphabetic}\p{Extended_Pictographic}][_\p{Alphabetic}\p{Nd}\p{Extended_Pictographic}]*/u,
